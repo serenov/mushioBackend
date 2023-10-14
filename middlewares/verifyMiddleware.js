@@ -10,7 +10,7 @@ function verifyToken(req, res, next) {
   }
 
   
-  jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
       return res.status(403).json({ message: 'Failed to authenticate token.', error: err });
     }
