@@ -46,47 +46,17 @@ exports.getRecordsByDate = async (req, res) => {
 
 exports.addRecord = async (req, res) => {
   try {
-    const { title, description, emoji_id } = req.body;
-    const userId = req.userId;
-    const uploadedFiles = req.uploadedFiles;
 
-    if (!title) {
-      return res.status(400).json({ message: 'Title cannot be empty' });
-    }
-
-    const urls = {
-      videoUrl: null,
-      audioUrl: null,
-      imageUrl: null,
-    };
-
-    uploadedFiles.forEach(filename => {
-      const fileExtension = filename.split('.').pop();
-
-      if (fileExtension === '.mp4') {
-        urls.videoUrl = filename;
-      }
-      else if (fileExtension === '.mp3') {
-        urls.audioUrl = filename;
-      }
-      else {
-        urls.imageUrl = filename;
-      }
-    })
-
+    console.log(req.userDetails)
     const newRecord = new Record({
-      userId,
-      title,
-      emoji_id,
-      description,
-      ...urls
+      user_id: req.userDetails.user_id,
+      ...req.body
     });
-
 
     const savedRecord = await newRecord.save();
 
     res.json({ message: 'Record created successfully', data: savedRecord });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating the record' });
+    res.status(500).json({ message: `Error creating the record. ${error}`});
   }
 };

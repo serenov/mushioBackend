@@ -11,12 +11,11 @@ mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTo
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+app.use('/uploads', express.static('uploads'));
 
-app.use(express.json());
 
-
-app.use('/api', require('./routes/gateway')); 
+app.use('/api', require('./routes/gateway'));
 
 app.listen(port, () => {
-  console.log(`Server is running on http:://127.0.0.1:${port} URI`);
+  console.log(`Server is running on http://127.0.0.1:${port} URI`);
 });

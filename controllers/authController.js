@@ -11,6 +11,8 @@ exports.login = async (req, res) => {
     if(error) {
       return res.status(400).json({ message: error })
     }
+
+    
     
     const { email, password } = req.body;
     const user = await User.findOne({ email });

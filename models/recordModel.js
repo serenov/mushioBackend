@@ -12,6 +12,9 @@ const recordSchema = new mongoose.Schema({
   description: {
     type: String,
   },
+  hashtags: {
+    type: [String]
+  },
   imageUrl: {
     type: String,
   },
@@ -21,7 +24,7 @@ const recordSchema = new mongoose.Schema({
   audioFileUrl: {
     type: String,
   },
-  userId: {
+  user_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', 
     required: true,
