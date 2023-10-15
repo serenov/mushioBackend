@@ -1,4 +1,5 @@
 const Record = require('../models/recordModel');
+const path = require('path');
 const { unlinkSync } = require("fs");
 
 
@@ -34,8 +35,15 @@ exports.getRecordsByDate = async (req, res) => {
       return res.status(400).json({ message: 'Invalid date.' });
     }
 
+    const query = {
+      user_id: req.userDetails.user_id,
+      recordDate: {
+        $gte: date, 
+        $lt: new Date(date.getTime() + 24 * 60 * 60 * 1000), 
+      },
+    };
 
-    const records = await Record.find({ userId: req.user.id, recordDate: date });
+    const records = await Record.find(query);
 
     res.json(records);
   } catch (err) {
@@ -65,15 +73,15 @@ exports.addRecord = async (req, res) => {
 const deleteFiles = (record) => {
   try {
     if (record.imageUrl) {
-      unlinkSync(path.join(__dirname, '..', imageUrl));
+      unlinkSync(path.join(__dirname, '..', record.imageUrl));
     }
     
     if (record.videoUrl) {
-      unlinkSync(path.join(__dirname, '..', videoUrl));
+      unlinkSync(path.join(__dirname, '..', record.videoUrl));
     }
 
     if (record.audioUrl) {
-      unlinkSync(path.join(__dirname, '..', audioUrl));
+      unlinkSync(path.join(__dirname, '..', record.audioUrl));
     }
   }
   catch (err) {
@@ -86,12 +94,14 @@ exports.deleteRecord = async (req, res) => {
   try {
     
     if (req.query.record_id === 'all') {
-      const records = await Record.findAll({});
+      const records = await Record.find({});
       records.forEach(record => deleteFiles(record))
+      await Record.deleteMany({});
     }
     else {
       const record = await Record.findOne({ _id: req.query.record_id });
       deleteFiles(record);
+      await Record.deleteOne({ _id: req.query.record_id });
     }
     res.status(200).json({ message: 'Successfully deleted.' })
   }
