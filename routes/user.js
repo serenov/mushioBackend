@@ -11,4 +11,6 @@ router.get('/getRecordsByDate', userController.getRecordsByDate);
 
 router.post('/postRecord', handleFileUpload, userController.addRecord);
 
+// router.delete('/deleteRecord')
+
 module.exports = router;

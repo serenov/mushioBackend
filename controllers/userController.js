@@ -1,10 +1,11 @@
 const Record = require('../models/recordModel');
+const { unlinkSync } = require("fs");
 
 
 exports.getAllRecords = async (req, res) => {
   try {
 
-    const records = await Record.find({ userId: req.userDetails.user_id });
+    const records = await Record.find({ user_id: req.userDetails.user_id });
 
     res.json(records);
   } catch (err) {
@@ -60,3 +61,43 @@ exports.addRecord = async (req, res) => {
     res.status(500).json({ message: `Error creating the record. ${error}`});
   }
 };
+
+const deleteFiles = (record) => {
+  try {
+    if (record.imageUrl) {
+      unlinkSync(path.join(__dirname, '..', imageUrl));
+    }
+    
+    if (record.videoUrl) {
+      unlinkSync(path.join(__dirname, '..', videoUrl));
+    }
+
+    if (record.audioUrl) {
+      unlinkSync(path.join(__dirname, '..', audioUrl));
+    }
+  }
+  catch (err) {
+    throw err;
+  }
+}
+
+exports.deleteRecord = async (req, res) => {
+
+  try {
+    
+    if (req.query.record_id === 'all') {
+      const records = await Record.findAll({});
+      records.forEach(record => deleteFiles(record))
+    }
+    else {
+      const record = await Record.findOne({ _id: req.query.record_id });
+      deleteFiles(record);
+    }
+    res.status(200).json({ message: 'Successfully deleted.' })
+  }
+  catch (err) {
+    res.status(500).json({ message: 'Internal server error.'})
+  }
+
+
+}

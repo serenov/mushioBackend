@@ -14,8 +14,6 @@ const handleFileUpload = (req, res, next) => {
   const form = new formidable.IncomingForm();
   const maxFileSize = 10 * 1024 * 1024; 
   
-  form.multipart = true;
-  
   form.parse(req, (err, fields, files) => {
     if (err) {
       res.statusCode = 500;
@@ -29,7 +27,7 @@ const handleFileUpload = (req, res, next) => {
     const error = validateSchema(body, recordSchema);
 
     if(error) {
-      res.status(400).json({ message: error });
+      return res.status(400).json({ message: error });
     }
 
     

@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
     
     
     const token = jwt.sign({ user_id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: '1h',
+      expiresIn: '10h',
     });
     
     res.status(200).json({ token });
@@ -73,3 +73,5 @@ exports.register = async (req, res) => {
     res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 };
+
+

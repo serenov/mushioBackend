@@ -21,7 +21,7 @@ const recordSchema = new mongoose.Schema({
   videoUrl: {
     type: String,
   },
-  audioFileUrl: {
+  audioUrl: {
     type: String,
   },
   user_id: {
