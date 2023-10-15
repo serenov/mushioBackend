@@ -17,8 +17,10 @@ const handleFileUpload = (req, res, next) => {
   
   form.maxFileSize = 10 * 1024 * 1024; 
 
-  form.onPart = function (part) {
-    if (part.filename) {
+  form.onPart = function (part) 
+  {
+    if (part.filename) 
+    {
       
       const validExtensions = ['.mp4', '.mp3', '.jpg'];
       const ext = path.extname(part.filename).toLowerCase();

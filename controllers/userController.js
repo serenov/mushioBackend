@@ -51,7 +51,7 @@ exports.addRecord = async (req, res) => {
     const uploadedFiles = req.uploadedFiles;
 
     if (!title) {
-      return res.status(400).json({ error: 'Title cannot be empty' });
+      return res.status(400).json({ message: 'Title cannot be empty' });
     }
 
     const urls = {

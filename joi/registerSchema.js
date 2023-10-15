@@ -5,5 +5,8 @@ module.exports = Joi.object({
   password: Joi.string()
     .min(8)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
-    .required(),
+    .required()
+    .messages({
+      'string.pattern.base': 'Password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+    }),
 });

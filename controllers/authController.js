@@ -7,7 +7,10 @@ const validateSchema = require('../utils/validateSchema');
 
 exports.login = async (req, res) => {
   try {
-    validateSchema(req.body, loginSchema)
+    const error = validateSchema(req.body, loginSchema)
+    if(error) {
+      return res.status(400).json({ message: error })
+    }
     
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -30,8 +33,7 @@ exports.login = async (req, res) => {
     
     res.status(200).json({ token });
   } catch (err) {
-    if(err.code == 401) res.status(401).json({ message: err.message })
-    else res.status(500).json({ message: 'Server error. Please try again later.' });
+    res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 };
 
@@ -39,7 +41,11 @@ exports.register = async (req, res) => {
   
   try {
     
-    validateSchema(req.body, registerSchema);
+    const error = validateSchema(req.body, registerSchema);
+
+    if(error) {
+      return res.status(400).json({ message: error });
+    }
 
     const { email, password } = req.body;
     const existingUser = await User.findOne({ email });
@@ -62,7 +68,6 @@ exports.register = async (req, res) => {
     
     res.status(201).json({ message: 'User registered successfully.' });
   } catch (err) {
-    if(err.code == 401) res.status(401).json({ message: err })
-    else res.status(500).json({ message: 'Server error. Please try again later.' });
+    res.status(500).json({ message: 'Server error. Please try again later.' });
   }
 };

@@ -10,6 +10,6 @@ router.get('/getallRecords', userController.getAllRecords);
 
 router.get('/getRecordsByDate', userController.getRecordsByDate);
 
-router.post('/postRecord', validateRecords, handleFileUpload)
+router.post('/postRecord', validateRecords, handleFileUpload, userController.addRecord);
 
 module.exports = router;
