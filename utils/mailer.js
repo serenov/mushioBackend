@@ -6,27 +6,33 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.MAIL_ID,
     pass: process.env.MAIL_PASSWORD,
+    clientId: process.env.MAIL_OAUTH_CLIENT_ID,
+    clientSecret: process.env.MAIL_OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.MAIL_OAUTH_REFRESH_TOKEN
   },
 });
 
 
-const sendVerificationEmail = (email, verificationToken) => {
+const sendVerificationEmail =  (email, OTP) => {
+  
+
   const mailOptions = {
     from: process.env.MAIL_ID,
     to: email,
     subject: 'Email Verification',
-    text: `Click the following link to verify your email: ${verificationToken}`,
+    text: `OTP for verifying your account: ${OTP}`,
   };
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Email verification failed:', error);
-    } else {
-      console.log('Email verification sent:', info.response);
-    }
-  });
+  
+  return new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("the passowrd", process.env.MAIL_ID, process.env.MAIL_PASSWORD);
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  })
 };
 
-module.exports = {
-  sendVerificationEmail,
-};
+module.exports = sendVerificationEmail;

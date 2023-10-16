@@ -32,12 +32,7 @@ const handleFileUpload = (req, res, next) => {
 
     
     const uploadedFiles = files; 
-    console.log(files);
     
-    
-    
-    console.log('Title:', body.title);
-    console.log('Description:', body.description);
     
     if (uploadedFiles) {
       
