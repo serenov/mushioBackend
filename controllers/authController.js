@@ -8,7 +8,8 @@ const registerSchema = require('../joi/registerSchema');
 const loginSchema = require('../joi/loginSchema')
 const validateSchema = require('../utils/validateSchema');
 const sendVerificationEmail = require('../utils/mailer');
-const randomstring = require('randomstring')
+const otpGenerator = require('otp-generator')
+
 
 exports.login = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ exports.login = async (req, res) => {
     if(error) {
       return res.status(400).json({ message: error })
     }
-
+    
     
     
     const { email, password } = req.body;
@@ -49,27 +50,26 @@ exports.register = async (req, res) => {
   try {
     
     const error = validateSchema(req.body, registerSchema);
-
+    
     if(error) {
       return res.status(400).json({ message: error });
     }
-
+    
     const { email, password } = req.body;
-    const existingUser = await User.findOne({ email });
+    const existingUser = await OtpModel.findOne({ email });
     
     if (existingUser) {
-      return res.status(409).json({ message: 'Email already in use.' });
+      return res.status(409).json({ message: 'OTP already sent for this email.' });
     }
     
     
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
-
-    const otp = randomstring.generate(6);
+    
+    const otp = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
 
     await sendVerificationEmail(email, otp);
     
-    res.status(200).json({ message: 'OTP sent for verification.' });
     
     const unVerifiedUser = new OtpModel({
       email,
@@ -79,6 +79,7 @@ exports.register = async (req, res) => {
     });
     
     await unVerifiedUser.save();
+    res.status(200).json({ message: 'OTP sent for verification.' });
     
   } catch (err) {
     res.status(500).json({ message: 'Server error. Please try again later.', error: err });
