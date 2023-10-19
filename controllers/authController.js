@@ -95,6 +95,7 @@ exports.verifyOTP = async (req, res) => {
       return res.status(400).json({ message: 'Invalid email address.' });
     }
 
+
     if (otpRecord.otp !== otp) {
       return res.status(400).json({ message: 'Invalid OTP.' });
     }
