@@ -11,6 +11,9 @@ mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true, useUnifiedTo
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
+
+app.use(require("cors")({ origin: '*' }));
+
 app.use('/uploads', express.static('uploads'));
 
 
