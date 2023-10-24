@@ -56,12 +56,13 @@ exports.register = async (req, res) => {
     }
     
     const { email, password } = req.body;
-    const existingUser = await OtpModel.findOne({ email });
+    
+    const existingUser = await OtpModel.findOne({ email }) || await User.findOne({ email });
+    console.log(existingUser, "Am i running bro?");
     
     if (existingUser) {
-      return res.status(409).json({ message: 'OTP already sent for this email.' });
+      return res.status(409).json({ message: 'Email is already Registered. Try logging in or verifying the Email.' });
     }
-    
     
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
